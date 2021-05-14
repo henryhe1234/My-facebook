@@ -10,8 +10,8 @@ function Home(props) {
   } = useQuery(FETCH_POSTS_QUERY);
 
   return (
-    <Grid columns={3} divided>
-      <Grid.Row>
+    <Grid columns={3}>
+      <Grid.Row className="page-title">
         <h1>Recent posts</h1>
       </Grid.Row>
       <Grid.Row>

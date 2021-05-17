@@ -1,10 +1,12 @@
-import React from "react";
+import React, { useState } from "react";
 import { Form, Button } from "semantic-ui-react";
 import { useForm } from "../util/hooks";
 import gql from "graphql-tag";
 import { useMutation } from "@apollo/client";
 import { FETCH_POSTS_QUERY } from "../util/graphql";
 function PostForm(props) {
+  const [errors, setErrors] = useState({});
+
   const { values, onChange, onSubmit } = useForm(createPostCallback, {
     body: "",
   });
@@ -12,6 +14,7 @@ function PostForm(props) {
     variables: values,
     update(proxy, result) {
       //what to do after getting the data back
+      console.log(error);
       const data = proxy.readQuery({
         query: FETCH_POSTS_QUERY,
       });
@@ -22,28 +25,41 @@ function PostForm(props) {
           getPosts: [result.data.createPost, ...data.getPosts],
         },
       });
-      console.log(result);
+
       values.body = "";
+    },
+    onError(err) {
+      setErrors(err.graphQLErrors[0].extensions.exception.errors); //error handling
     },
   });
   function createPostCallback() {
     createPost();
   }
   return (
-    <Form onSubmit={onSubmit}>
-      <h2>Create a post:</h2>
-      <Form.Field>
-        <Form.Input
-          placeholder="hi World!"
-          name="body"
-          onChange={onChange}
-          value={values.body}
-        />
-        <Button type="submit" color="teal">
-          Submit
-        </Button>
-      </Form.Field>
-    </Form>
+    <>
+      <Form onSubmit={onSubmit}>
+        <h2>Create a post:</h2>
+        <Form.Field>
+          <Form.Input
+            placeholder="hi World!"
+            name="body"
+            onChange={onChange}
+            value={values.body}
+            error={error ? true : false}
+          />
+          <Button type="submit" color="teal">
+            Submit
+          </Button>
+        </Form.Field>
+      </Form>
+      {error && (
+        <div className="ui error message" style={{ marginBottom: 20 }}>
+          <ul className="list">
+            <li>{error.graphQLErrors[0].message}</li>
+          </ul>
+        </div>
+      )}
+    </>
   );
 }
 const CREATE_POST_MUTATION = gql`

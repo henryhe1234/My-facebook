@@ -11,7 +11,7 @@ import PostForm from "../components/PostForm";
 function Home(props) {
   const {
     loading,
-    data: { getPosts: posts } = {}, //javascript destructuring object Assigning to new variable names
+    data: { getPosts: posts } = {}, //javascript destructuring object Assigning to new variable namesss
   } = useQuery(FETCH_POSTS_QUERY);
   const { user } = useContext(AuthContext);
 

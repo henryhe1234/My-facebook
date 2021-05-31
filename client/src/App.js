@@ -27,6 +27,12 @@ function App() {
       </Router>
     </AuthProvider>
   );
+  const check = 0; // 0, "", null, undefined
+  return <div className="App">{check === 0 ? <span>Hello</span> : 0}</div>;
+  // const check = 0; // 0, "", null, undefined
+  // return <div className="App">{!check && <span>Hello</span>}</div>;
 }
-
+// { check && <span>Hello</span> }
+// </div>
+// );
 export default App;
